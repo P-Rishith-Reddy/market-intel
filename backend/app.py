@@ -1,7 +1,5 @@
-"""
-Market Intelligence Platform - FastAPI Backend
-Main application entry point
-"""
+from dotenv import load_dotenv
+load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

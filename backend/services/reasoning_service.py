@@ -11,7 +11,7 @@ from typing import Optional
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL = "llama3-8b-8192"
+GROQ_MODEL = "llama-3.1-8b-instant"
 
 
 def _build_analysis_prompt(title: str, summary: str, sentiment: str, sectors: list[str]) -> str:
@@ -38,20 +38,6 @@ Respond ONLY with a valid JSON object (no markdown, no explanation):
 Be concise, specific, and analytical. Use real ticker symbols."""
 
 
-def _mock_reasoning(title: str, sectors: list[str], sentiment: str) -> dict:
-    """Fallback mock reasoning when Groq is unavailable."""
-    sector_str = sectors[0].replace("_", " ") if sectors else "multiple sectors"
-
-    return {
-        "economic_reasoning": f"This development in {sector_str} signals potential structural shifts in market dynamics. The {sentiment} sentiment reflects investor uncertainty about second-order effects on supply chains and pricing power.",
-        "chain_reaction": f"News breaks → {sector_str.title()} volatility spikes → Institutional investors rebalance → Retail follows → Broader market repricing occurs",
-        "sector_impact": f"The {sector_str} sector faces immediate pressure with downstream effects likely propagating to related industries within 2-4 trading sessions.",
-        "bullish_sectors": ["defense", "energy"] if sentiment == "negative" else ["technology", "consumer_goods"],
-        "bearish_sectors": sectors[:2] if sentiment == "negative" else ["real_estate", "airlines"],
-        "affected_stocks": ["XOM", "CVX", "LMT", "RTX"] if "energy" in sectors else ["NVDA", "MSFT", "AAPL", "META"],
-    }
-
-
 async def generate_reasoning(
     title: str,
     summary: str,
@@ -60,11 +46,10 @@ async def generate_reasoning(
 ) -> dict:
     """
     Generate economic reasoning using Groq API.
-    Falls back to mock data if API unavailable.
+    Raises exception if API call fails or key is missing.
     """
     if not GROQ_API_KEY:
-        print("No GROQ_API_KEY found, using mock reasoning.")
-        return _mock_reasoning(title, sectors, sentiment)
+        raise Exception("GROQ_API_KEY environment variable is not set in backend/.env")
 
     prompt = _build_analysis_prompt(title, summary, sentiment, sectors)
 
@@ -103,10 +88,10 @@ async def generate_reasoning(
 
         except json.JSONDecodeError as e:
             print(f"Groq JSON parse error: {e}")
-            return _mock_reasoning(title, sectors, sentiment)
+            raise Exception(f"Failed to parse Groq response as JSON: {e}")
         except httpx.HTTPError as e:
             print(f"Groq API HTTP error: {e}")
-            return _mock_reasoning(title, sectors, sentiment)
+            raise Exception(f"Groq API request failed with HTTP error: {e}")
         except Exception as e:
             print(f"Groq API error: {e}")
-            return _mock_reasoning(title, sectors, sentiment)
+            raise Exception(f"Groq API request failed: {e}")

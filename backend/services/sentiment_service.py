@@ -28,31 +28,8 @@ def _load_pipeline():
         except Exception as e:
             print(f"FinBERT load error: {e}")
             _pipeline = None
+            raise Exception(f"Failed to load FinBERT model: {e}")
     return _pipeline
-
-
-def _mock_sentiment(text: str) -> dict:
-    """
-    Deterministic mock sentiment when FinBERT isn't available.
-    Uses simple keyword heuristics for demo purposes.
-    """
-    text_lower = text.lower()
-
-    negative_words = ["fall", "drop", "crisis", "war", "conflict", "cut",
-                      "decline", "recession", "loss", "risk", "concern", "inflation",
-                      "surge", "spike", "disruption", "contract"]
-    positive_words = ["record", "surge", "beat", "growth", "rally", "high",
-                      "buyback", "profit", "gain", "strong", "revenue", "boom"]
-
-    neg_count = sum(1 for w in negative_words if w in text_lower)
-    pos_count = sum(1 for w in positive_words if w in text_lower)
-
-    if pos_count > neg_count:
-        return {"label": "positive", "confidence": 0.72 + (pos_count * 0.03)}
-    elif neg_count > pos_count:
-        return {"label": "negative", "confidence": 0.68 + (neg_count * 0.03)}
-    else:
-        return {"label": "neutral", "confidence": 0.61}
 
 
 def analyze_sentiment(text: str) -> dict:
@@ -66,26 +43,23 @@ def analyze_sentiment(text: str) -> dict:
     pipe = _load_pipeline()
 
     if pipe is None:
-        # FinBERT not available - use mock
-        return _mock_sentiment(text)
+        raise Exception("FinBERT model is not loaded or failed to initialize.")
 
     try:
         results = pipe(text)
-        # results is list of list of dicts: [[{label, score}, ...]]
         scores = results[0] if isinstance(results[0], list) else results
 
         # Find the highest scoring label
         best = max(scores, key=lambda x: x["score"])
         label = best["label"].lower()
 
-        # Map FinBERT labels (positive/negative/neutral)
         return {
             "label": label,
             "confidence": round(best["score"], 3),
         }
     except Exception as e:
         print(f"Sentiment analysis error: {e}")
-        return _mock_sentiment(text)
+        raise Exception(f"FinBERT analysis error: {e}")
 
 
 async def analyze_sentiment_async(text: str) -> dict:
