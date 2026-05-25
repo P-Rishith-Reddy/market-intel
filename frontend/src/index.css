@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(37, 168, 255, 0.3) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: rgba(37, 168, 255, 0.3);
+    border-radius: 4px;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: #050a12;
+    color: #e2e8f0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+}
+
+@layer components {
+  /* Glassmorphism card */
+  .glass-card {
+    @apply bg-white/[0.03] backdrop-blur-sm border border-white/[0.07] rounded-xl;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300 hover:bg-white/[0.06] hover:border-brand-500/30;
+  }
+
+  /* Neon accent borders */
+  .border-glow-blue {
+    box-shadow: 0 0 0 1px rgba(37, 168, 255, 0.4), 0 0 16px rgba(37, 168, 255, 0.1);
+  }
+
+  .border-glow-green {
+    box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.4), 0 0 16px rgba(52, 211, 153, 0.1);
+  }
+
+  .border-glow-red {
+    box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.4), 0 0 16px rgba(248, 113, 113, 0.1);
+  }
+
+  /* Sentiment badges */
+  .badge-positive {
+    @apply bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-xs font-medium font-mono px-2 py-0.5 rounded-full;
+  }
+
+  .badge-negative {
+    @apply bg-red-500/15 text-red-400 border border-red-500/30 text-xs font-medium font-mono px-2 py-0.5 rounded-full;
+  }
+
+  .badge-neutral {
+    @apply bg-blue-500/15 text-blue-300 border border-blue-500/30 text-xs font-medium font-mono px-2 py-0.5 rounded-full;
+  }
+
+  /* Sector pills */
+  .sector-pill {
+    @apply bg-brand-500/10 text-brand-300 border border-brand-500/20 text-xs font-mono px-2.5 py-1 rounded-full whitespace-nowrap;
+  }
+
+  /* Loading shimmer */
+  .shimmer {
+    background: linear-gradient(90deg, 
+      rgba(255,255,255,0.03) 0%, 
+      rgba(255,255,255,0.08) 50%, 
+      rgba(255,255,255,0.03) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Animated gradient border */
+  .gradient-border {
+    position: relative;
+    border-radius: 12px;
+  }
+  
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, rgba(37, 168, 255, 0.5), rgba(99, 102, 241, 0.3), rgba(37, 168, 255, 0.1));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .gradient-border:hover::before {
+    opacity: 1;
+  }
+
+  /* React Flow custom node styles */
+  .rf-node-event {
+    @apply bg-brand-700/80 border-brand-400/60 text-brand-100;
+  }
+
+  .rf-node-positive {
+    @apply bg-emerald-900/80 border-emerald-500/60 text-emerald-100;
+  }
+
+  .rf-node-negative {
+    @apply bg-red-900/80 border-red-500/60 text-red-100;
+  }
+
+  .rf-node-neutral {
+    @apply bg-slate-800/80 border-slate-500/60 text-slate-100;
+  }
+}
+
+/* React Flow overrides */
+.react-flow__background {
+  background-color: #050a12 !important;
+}
+
+.react-flow__controls button {
+  background-color: rgba(15, 31, 58, 0.9) !important;
+  border-color: rgba(37, 168, 255, 0.2) !important;
+  color: #94a3b8 !important;
+}
+
+.react-flow__controls button:hover {
+  background-color: rgba(37, 168, 255, 0.15) !important;
+}
+
+.react-flow__minimap {
+  background-color: rgba(10, 22, 40, 0.8) !important;
+}
+
+.react-flow__edge-path {
+  stroke: rgba(37, 168, 255, 0.5) !important;
+  stroke-width: 1.5 !important;
+}
+
+.react-flow__edge.animated .react-flow__edge-path {
+  stroke-dasharray: 6;
+  animation: dashdraw 0.5s linear infinite;
+}
+
+@keyframes dashdraw {
+  to { stroke-dashoffset: -12; }
+}
