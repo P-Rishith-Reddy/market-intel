@@ -3,10 +3,11 @@
 @tailwind utilities;
 
 @layer base {
-  * {
+  *, *::before, *::after {
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: rgba(37, 168, 255, 0.3) transparent;
+    font-family: 'Roboto', sans-serif !important;
   }
 
   *::-webkit-scrollbar {
