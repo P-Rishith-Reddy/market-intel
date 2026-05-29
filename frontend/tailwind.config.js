@@ -25,9 +25,9 @@ export default {
         }
       },
       fontFamily: {
-        display: ['"Space Grotesk"', 'sans-serif'],
+        display: ['"Roboto"', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
-        body: ['"DM Sans"', 'sans-serif'],
+        body: ['"Roboto"', 'sans-serif'],
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

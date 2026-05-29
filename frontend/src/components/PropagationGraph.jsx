@@ -107,7 +107,7 @@ function CustomNode({ data }) {
         minWidth: 160,
         maxWidth: 220,
         fontSize: 12,
-        fontFamily: '"DM Sans", sans-serif',
+        fontFamily: '"Roboto", sans-serif',
         cursor: 'default',
         transition: 'all 0.2s',
       }}

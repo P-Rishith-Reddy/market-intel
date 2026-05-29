@@ -6,6 +6,7 @@ Only handles sentiment classification - nothing else.
 
 import asyncio
 from typing import Optional
+from transformers import pipeline
 
 # Lazy load the model to avoid slow startup
 _pipeline = None
@@ -16,7 +17,6 @@ def _load_pipeline():
     global _pipeline
     if _pipeline is None:
         try:
-            from transformers import pipeline
             print("Loading FinBERT model... (first run may take a moment)")
             _pipeline = pipeline(
                 "text-classification",
